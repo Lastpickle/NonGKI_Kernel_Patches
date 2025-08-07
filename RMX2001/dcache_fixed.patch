@@ -1,3 +1,5 @@
+diff --git a/fs/dcache.c b/fs/dcache.c
+index 682526c61358..bcf4a0c5dd15 100644
 --- fs/dcache.c
 +++ fs/dcache.c
 @@ -39,6 +39,9 @@
