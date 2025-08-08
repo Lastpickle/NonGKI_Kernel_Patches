@@ -1,7 +1,7 @@
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 682526c61358..bcf4a0c5dd15 100644
---- fs/dcache.c
-+++ fs/dcache.c
+index 2f01b271023d..9878affeb944 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
 @@ -39,6 +39,9 @@
  #include <linux/prefetch.h>
  #include <linux/ratelimit.h>
