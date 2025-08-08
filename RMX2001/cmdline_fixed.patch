@@ -1,5 +1,5 @@
---- fs/proc/cmdline.c
-+++ fs/proc/cmdline.c
+--- a/fs/proc/cmdline.c
++++ b/fs/proc/cmdline.c
 @@ -4,8 +4,18 @@
  #include <linux/proc_fs.h>
  #include <linux/seq_file.h>
@@ -16,6 +16,6 @@
 +		return 0;
 +	}
 +#endif
- 	seq_puts(m, saved_command_line);
- 	seq_putc(m, '\n');
+ 	seq_printf(m, "%s\n", saved_command_line);
  	return 0;
+ }
