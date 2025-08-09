@@ -23,21 +23,16 @@
  #define CREATE_TRACE_POINTS
  #include <trace/events/namei.h>
  
-@@ -1633,18 +1656,67 @@ static struct dentry *lookup_dcache(const struct qstr *name,
- static struct dentry *__lookup_hash(const struct qstr *name,
+@@ -1620,7 +1620,13 @@ static struct dentry *__lookup_hash(const struct qstr *name,
  		struct dentry *base, unsigned int flags)
  {
-+
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
 +	struct dentry *dentry;
 +	bool found_sus_path = false;
 +#else
  	struct dentry *dentry = lookup_dcache(name, base, flags);
 +#endif
- 	struct dentry *old;
- 	struct inode *dir = base->d_inode;
- 
--	if (dentry)
++
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
 +	if (base && base->d_inode && !found_sus_path) {
 +		if (susfs_is_base_dentry_android_data_dir(base) &&
@@ -60,24 +55,18 @@
 +	dentry = lookup_dcache(name, base, flags);
 +retry:
 +#endif
-+
-+		if (dentry)
+ 
+-	if (dentry)
++	if (dentry) {
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
-+	{
 +		if (!found_sus_path && !IS_ERR(dentry) && dentry->d_inode && susfs_is_inode_sus_path(dentry->d_inode)) {
 +			dentry = lookup_dcache(&susfs_fake_qstr_name, base, flags);
 +			found_sus_path = true;
 +			goto retry;
 +		}
-+ 		return dentry;
-+	}
-+#else
- 		return dentry;
 +#endif
- 
- 	/* Don't create child dentry for a dead directory. */
- 	if (unlikely(IS_DEADDIR(dir)))
- 		return ERR_PTR(-ENOENT);
+ 		return dentry;
++	}
  
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
 +	if (found_sus_path) {
