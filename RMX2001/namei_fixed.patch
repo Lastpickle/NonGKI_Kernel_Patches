@@ -23,14 +23,6 @@
  #define CREATE_TRACE_POINTS
  #include <trace/events/namei.h>
  
-@@ -1089,6 +1108,7 @@ static int may_linkat(struct path *link)
- {
- 	struct inode *inode = link->dentry->d_inode;
- 
-+
- 	/* Inode writeback is not safe when the uid or gid are invalid. */
- 	if (!uid_valid(inode->i_uid) || !gid_valid(inode->i_gid))
- 		return -EOVERFLOW;
 @@ -1633,18 +1656,67 @@ static struct dentry *lookup_dcache(const struct qstr *name,
  static struct dentry *__lookup_hash(const struct qstr *name,
  		struct dentry *base, unsigned int flags)
