@@ -81,8 +81,8 @@
  	if (unlikely(!dentry))
  		return ERR_PTR(-ENOMEM);
  
-@@ -1802,12 +1925,41 @@ static struct dentry *__lookup_slow(const struct qstr *name,
- 	struct dentry *dentry, *old;
+@@ -1765,13 +1902,42 @@ static struct dentry *lookup_slow(const struct qstr *name,
+ 	struct dentry *dentry = ERR_PTR(-ENOENT), *old;
  	struct inode *inode = dir->d_inode;
  	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
@@ -91,9 +91,10 @@
 +	bool is_nd_flags_lookup_last = (flags & ND_FLAGS_LOOKUP_LAST);
 +#endif
  
+ 	inode_lock_shared(inode);
  	/* Don't go there if it's already dead */
  	if (unlikely(IS_DEADDIR(inode)))
- 		return ERR_PTR(-ENOENT);
+ 		goto out;
  again:
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
 +	if (found_sus_path) {
@@ -121,7 +122,7 @@
 +retry:
 +#endif
  	if (IS_ERR(dentry))
- 		return dentry;
+ 		goto out;
  	if (unlikely(!d_in_lookup(dentry))) {
 @@ -1831,6 +1983,17 @@ static struct dentry *__lookup_slow(const struct qstr *name,
  			dentry = old;
