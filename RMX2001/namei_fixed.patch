@@ -124,37 +124,19 @@
  	if (IS_ERR(dentry))
  		goto out;
  	if (unlikely(!d_in_lookup(dentry))) {
-@@ -1831,6 +1983,17 @@ static struct dentry *__lookup_slow(const struct qstr *name,
- 			dentry = old;
- 		}
- 	}
-+#ifdef CONFIG_KSU_SUSFS_SUS_PATH
-+	if (is_nd_flags_lookup_last && !found_sus_path) {
-+		if (dentry && !IS_ERR(dentry) && dentry->d_inode) {
-+			if (susfs_is_inode_sus_path(dentry->d_inode)) {
-+				dentry = d_alloc_parallel(dir, &susfs_fake_qstr_name, &sus_wq);
-+				found_sus_path = true;
-+				goto retry;
-+			}
-+		}
-+	}
-+#endif
- 	return dentry;
- }
- 
-@@ -3372,15 +3572,53 @@ static int lookup_open(struct nameidata *nd, struct path *path,
+@@ -3248,15 +3509,54 @@ static int lookup_open(struct nameidata *nd, struct path *path,
  	int error, create_error = 0;
  	umode_t mode = op->mode;
  	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
--
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
 +	bool found_sus_path = false;
 +	bool is_nd_state_open_last = (nd->state & ND_STATE_OPEN_LAST);
 +#endif
+ 
  	if (unlikely(IS_DEADDIR(dir_inode)))
  		return -ENOENT;
  
- 	file->f_mode &= ~FMODE_CREATED;
+ 	*opened &= ~FILE_CREATED;
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
 +	if (is_nd_state_open_last) {
 +		if (susfs_is_base_dentry_android_data_dir(dir) &&
