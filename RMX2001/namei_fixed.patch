@@ -179,16 +179,3 @@
  			if (IS_ERR(dentry))
  				return PTR_ERR(dentry);
  		}
-@@ -3439,9 +3677,10 @@ static int lookup_open(struct nameidata *nd, struct path *path,
- 	if (dir_inode->i_op->atomic_open) {
- 		error = atomic_open(nd, dentry, path, file, op, open_flag,
- 				    mode);
--		if (unlikely(error == -ENOENT) && create_error)
-+		if (unlikely(error == -ENOENT) && create_error){
- 			error = create_error;
--		return error;
-+			return error;
-+		}
- 	}
- 
- no_open:
