@@ -1,6 +1,6 @@
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -2230,11 +2227,6 @@
+@@ -2232,11 +2229,6 @@
  			continue;
  		if (dentry_cmp(dentry, str, hashlen_len(hashlen)) != 0)
  			continue;
