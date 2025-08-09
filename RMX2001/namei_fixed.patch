@@ -23,7 +23,7 @@
  #define CREATE_TRACE_POINTS
  #include <trace/events/namei.h>
  
-@@ -1620,7 +1620,13 @@ static struct dentry *__lookup_hash(const struct qstr *name,
+@@ -1662,18 +1685,67 @@ static struct dentry *__lookup_hash(const struct qstr *name,
  		struct dentry *base, unsigned int flags)
  {
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
