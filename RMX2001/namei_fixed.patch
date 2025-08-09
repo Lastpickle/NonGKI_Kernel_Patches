@@ -81,7 +81,7 @@
  	if (unlikely(!dentry))
  		return ERR_PTR(-ENOMEM);
  
-@@ -1765,13 +1902,42 @@ static struct dentry *lookup_slow(const struct qstr *name,
+@@ -1796,13 +1902,42 @@ static struct dentry *lookup_slow(const struct qstr *name,
  	struct dentry *dentry = ERR_PTR(-ENOENT), *old;
  	struct inode *inode = dir->d_inode;
  	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
