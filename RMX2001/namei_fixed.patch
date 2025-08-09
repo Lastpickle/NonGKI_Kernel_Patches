@@ -81,7 +81,7 @@
  	if (unlikely(!dentry))
  		return ERR_PTR(-ENOMEM);
  
-@@ -1765,12 +1888,41 @@ static struct dentry *lookup_slow(const struct qstr *name,
+@@ -1765,16 +1888,45 @@ static struct dentry *lookup_slow(const struct qstr *name,
 				  struct dentry *dir,
 				  unsigned int flags)
  {
