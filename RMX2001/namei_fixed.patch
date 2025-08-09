@@ -82,9 +82,12 @@
  		return ERR_PTR(-ENOMEM);
  
 @@ -1765,12 +1888,41 @@ static struct dentry *lookup_slow(const struct qstr *name,
- 	struct dentry *dentry = ERR_PTR(-ENOENT), *old;
- 	struct inode *inode = dir->d_inode;
- 	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+				  struct dentry *dir,
+				  unsigned int flags)
+ {
+	struct dentry *dentry = ERR_PTR(-ENOENT), *old;
+	struct inode *inode = dir->d_inode;
+	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
 +	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(sus_wq);
 +	bool found_sus_path = false;
