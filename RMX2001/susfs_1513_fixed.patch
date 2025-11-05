@@ -1,0 +1,57 @@
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 312cfa0..d83f21e 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -916,6 +916,20 @@ static int show_smap(struct seq_file *m, void *v, int is_pid)
+ 	seq_putc(m, '\n');
+ }
+
++#ifdef CONFIG_KSU_SUSFS_SUS_MAP
++		if (vma->vm_file &&
++			unlikely(file_inode(vma->vm_file)->i_mapping->flags & BIT_SUS_MAPS) &&
++			susfs_is_current_proc_umounted())
++		{
++			seq_printf(m,
++				"Size:           %8lu kB\n"
++				"KernelPageSize: %8lu kB\n"
++				"MMUPageSize:    %8lu kB\n",
++				(vma->vm_end - vma->vm_start) >> 10,
++				4, 4);
++			goto bypass_orig_flow;
++		}
++#endif
+ 		seq_printf(m,
+ 			   "Size:           %8lu kB\n"
+ 			   "KernelPageSize: %8lu kB\n"
+@@ -923,8 +937,9 @@ static int show_smap(struct seq_file *m, void *v, int is_pid)
+ 			   (vma->vm_end - vma->vm_start) >> 10,
+ 			   vma_kernel_pagesize(vma) >> 10,
+ 			   vma_mmu_pagesize(vma) >> 10);
+-
++#ifdef CONFIG_KSU_SUSFS_SUS_MAP
++bypass_orig_flow:
++#endif
+  __show_smap(m, &mss);
+
+	arch_show_smap(m, vma);
+@@ -927,7 +942,20 @@ static int show_smap(struct seq_file *m, void *v, int is_pid)
+  __show_smap(m, &mss);
++#ifdef CONFIG_KSU_SUSFS_SUS_MAP
++		if (vma->vm_file &&
++			unlikely(file_inode(vma->vm_file)->i_mapping->flags & BIT_SUS_MAPS) &&
++			susfs_is_current_proc_umounted())
++		{
++			seq_puts(m, "VmFlags: mr mw me");
++			seq_putc(m, '\n');
++			goto bypass_orig_flow2;
++		}
++#endif
+ 		arch_show_smap(m, vma);
+ 		show_smap_vma_flags(m, vma);
+ 	}
++#ifdef CONFIG_KSU_SUSFS_SUS_MAP
++bypass_orig_flow2:
++#endif
+ 	m_cache_vma(m, vma);
+  
+ 	return ret;
