@@ -6,8 +6,8 @@ index 7ca7ae383..e43c79249 100644
  		   mss->anonymous_thp >> 10,
  		   mss->shmem_thp >> 10,
  		   mss->shared_hugetlb >> 10,
-+#ifdef CONFIG_KSU_SUSFS_SUS_MAP
-		if (vma->vm_file &&
+-#ifdef CONFIG_KSU_SUSFS_SUS_MAP
+-		if (vma->vm_file &&
 -			unlikely(file_inode(vma->vm_file)->i_mapping->flags & BIT_SUS_MAPS) &&
 -			susfs_is_current_proc_umounted())
 -		{
